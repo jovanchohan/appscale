@@ -871,7 +871,6 @@ public final class LocalDatastoreService extends AbstractLocalRpcService
                     count = 20;
                 }
             }
-
             DatastorePb.QueryResult result = nextImpl(liveQuery, query.getOffset(), count, query.isCompile());
             if (query.isCompile())
             {
@@ -888,6 +887,10 @@ public final class LocalDatastoreService extends AbstractLocalRpcService
             {
                 result.addIndex(wrapIndexInCompositeIndex(app, index));
             }
+            /*
+             * AppScale - adding skipped results to the result, otherwise query counts are wrong.
+             */
+            result.setSkippedResults(queryResult.getSkippedResults());
             return result;
         }
     }
